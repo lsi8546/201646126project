@@ -30,6 +30,7 @@ from matplotlib import font_manager, rc
 font_name = font_manager.FontProperties(fname="c:/windows/Fonts/malgun.ttf").get_name()
 rc('font', family = font_name)
 
+#1.최근 부산지역 미세먼지 변화량 분석
 df = pd.read_csv('온천동(도로변) 측정소 2019년 05월 대기질 정보 일평균자료.CSV')  
 print(df)
 
@@ -40,4 +41,52 @@ plt.ylabel('유해물질')
 plt.title('부산지역 5월 유해물질 양 변화')
 plt.legend()
 plt.show
+--------------------------------------------------------------------------------------------------------------------------------------
+#2.2018년 한해동안 우리나라 지역별 미세먼지양 분석
+df = pd.read_csv('2018년.CSV')  
+df = df.groupby('지역')['미세먼지'].mean()
+print(df)
+
+df.plot(kind='bar')
+plt.xlabel('지역')
+plt.ylabel('미세먼지')
+plt.title('2018년도 전국 미세먼지 양')
+plt.show()
+--------------------------------------------------------------------------------------------------------------------------------------
+#3.지역별 산림현황
+df = pd.read_csv('나무.CSV')  
+df = df[['지역', '전체면적(만㎡)']]
+df = df.head(17)
+print(df)
+
+plt.bar(df['지역'], df['전체면적(만㎡)'])
+plt.xlabel('지역')
+plt.ylabel('산림면적')
+plt.title('지역별 산림면적')
+plt.show()
+--------------------------------------------------------------------------------------------------------------------------------------
+#4.미세먼지양과 나무(산림)간의 상관관계 도출
+df1 = pd.read_csv('나무.CSV')  
+df1 = df1[['지역', '전체면적(만㎡)']]
+df1 = df1.head(17)
+
+df2 = pd.read_csv('2018년.CSV')
+df2 = df2.groupby('지역')['미세먼지'].mean()
+
+df = pd.merge(df1, df2, on="지역") 
+df = df[[ '전체면적(만㎡)','미세먼지']]
+df = df.head(17)
+df = df.corr()
+print(df)
+--------------------------------------------------------------------------------------------------------------------------------------
+#5. 전국의 지역별 공원의 수 분석
+df = pd.read_csv('전국도시공원표준데이터.CSV') 
+df = df.groupby('제공기관명')['관리번호'].nunique()
+print(df)
+
+df.plot(kind='bar')
+plt.xlabel('지역')
+plt.ylabel('공원수')
+plt.title('지역별 공원수')
+plt.show()
 ~~~
